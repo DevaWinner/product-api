@@ -8,7 +8,7 @@ async function createProduct(req, res, next) {
 		const saved = await product.save();
 		res.status(201).json(saved);
 	} catch (error) {
-		next(error); // Pass to error handler
+		next(error);
 	}
 }
 

@@ -7,11 +7,12 @@ const options = {
 		info: {
 			title: "Product Management API",
 			version: "1.0.0",
-			description: "API Documentation for my e-commerce product management system",
+			description:
+				"API Documentation for my e-commerce product management system",
 		},
 		servers: [
 			{
-				url: "http://localhost:3000",
+				url: "https://product-api-d8ak.onrender.com/",
 			},
 		],
 	},

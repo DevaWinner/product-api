@@ -3,6 +3,7 @@ const express = require("express");
 const { connectDB } = require("./config/database");
 const productRoutes = require("./routes/productRoutes");
 const authRoutes = require("./routes/authRoutes");
+const orderRoutes = require("./routes/orderRoutes");
 const errorHandler = require("./middlewares/errorHandler");
 const { swaggerUi, swaggerSpec } = require("./docs/swagger");
 const passport = require("passport");
@@ -29,6 +30,9 @@ app.use("/auth", authRoutes);
 
 // Product Routes
 app.use("/products", productRoutes);
+
+// Order Routes
+app.use("/orders", orderRoutes);
 
 // API Docs
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));

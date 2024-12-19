@@ -12,7 +12,7 @@ const options = {
 		},
 		servers: [
 			{
-				url: "http://localhost:3000/",
+				url: "https://product-api-d8ak.onrender.com/",
 			},
 		],
 		components: {
@@ -30,7 +30,115 @@ const options = {
 					},
 				},
 			},
+			schemas: {
+				Product: {
+					type: "object",
+					required: ["name", "description", "price", "category", "inStock"],
+					properties: {
+						name: {
+							type: "string",
+						},
+						description: {
+							type: "string",
+						},
+						price: {
+							type: "number",
+						},
+						category: {
+							type: "string",
+						},
+						inStock: {
+							type: "boolean",
+						},
+						createdAt: {
+							type: "string",
+							format: "date-time",
+						},
+						updatedAt: {
+							type: "string",
+							format: "date-time",
+						},
+					},
+				},
+				User: {
+					type: "object",
+					properties: {
+						id: {
+							type: "string",
+							description: "User ID",
+						},
+						username: {
+							type: "string",
+							description: "Username",
+						},
+						email: {
+							type: "string",
+							format: "email",
+							description: "User email",
+						},
+					},
+				},
+				Order: {
+					type: "object",
+					required: ["userId", "products", "totalAmount"],
+					properties: {
+						userId: {
+							type: "string",
+							description: "User ID",
+						},
+						products: {
+							type: "array",
+							items: {
+								type: "object",
+								required: ["productId", "quantity", "price"],
+								properties: {
+									productId: {
+										type: "string",
+										description: "Product ID",
+									},
+									quantity: {
+										type: "number",
+										description: "Quantity ordered",
+									},
+									price: {
+										type: "number",
+										description: "Price of the product",
+									},
+								},
+							},
+						},
+						totalAmount: {
+							type: "number",
+							description: "Total amount of the order",
+						},
+						status: {
+							type: "string",
+							description: "Order status",
+							enum: ["pending", "shipped", "delivered"],
+							default: "pending",
+						},
+						createdAt: {
+							type: "string",
+							format: "date-time",
+						},
+						updatedAt: {
+							type: "string",
+							format: "date-time",
+						},
+					},
+				},
+			},
 		},
+		tags: [
+			{
+				name: "Product",
+				description: "API endpoints related to products",
+			},
+			{
+				name: "Order",
+				description: "API endpoints related to orders",
+			},
+		],
 		security: [
 			{
 				githubAuth: [],

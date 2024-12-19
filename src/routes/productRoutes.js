@@ -10,108 +10,44 @@ const { validateProduct } = require("../validators/productValidator");
 const router = express.Router();
 
 /**
- * @swagger
- * components:
- *   schemas:
- *     Product:
- *       type: object
- *       required:
- *         - name
- *         - description
- *         - price
- *         - category
- *         - inStock
- *       properties:
- *         name:
- *           type: string
- *         description:
- *           type: string
- *         price:
- *           type: number
- *         category:
- *           type: string
- *         inStock:
- *           type: boolean
- *         createdAt:
- *           type: string
- *           format: date-time
- *         updatedAt:
- *           type: string
- *           format: date-time
+ * Middleware to check if the user is authenticated
  */
+function isAuthenticated(req, res, next) {
+	if (req.isAuthenticated()) {
+		return next();
+	}
+	return res.status(401).json({ error: "Unauthorized access" });
+}
 
 /**
  * @swagger
+ * securitySchemes:
+ *   githubAuth:
+ *     type: oauth2
+ *     flows:
+ *       authorizationCode:
+ *         authorizationUrl: https://github.com/login/oauth/authorize
+ *         tokenUrl: https://github.com/login/oauth/access_token
+ *         scopes:
+ *           read:user: Read user information
+ *
+ * @swagger
  * /products:
  *   get:
+ *     security:
+ *       - githubAuth: []
  *     summary: Get all products
  *     responses:
  *       200:
  *         description: A list of products
- *
- *   post:
- *     summary: Create a new product
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/Product'
- *     responses:
- *       201:
- *         description: Product created successfully
+ *       401:
+ *         description: Unauthorized access
  */
 
-/**
- * @swagger
- * /products/{id}:
- *   get:
- *     summary: Get a product by ID
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *     responses:
- *       200:
- *         description: A single product object
- *       404:
- *         description: Product not found
- *
- *   put:
- *     summary: Update a product by ID
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/Product'
- *     responses:
- *       200:
- *         description: Product updated successfully
- *       404:
- *         description: Product not found
- *
- *   delete:
- *     summary: Delete a product by ID
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *     responses:
- *       204:
- *         description: Product deleted successfully
- *       404:
- *         description: Product not found
- */
-
-router.get("/", getAllProducts);
-router.post("/", validateProduct, createProduct);
-router.get("/:id", getProductById);
-router.put("/:id", validateProduct, updateProduct);
-router.delete("/:id", deleteProduct);
+router.get("/", isAuthenticated, getAllProducts);
+router.post("/", isAuthenticated, validateProduct, createProduct);
+router.get("/:id", isAuthenticated, getProductById);
+router.put("/:id", isAuthenticated, validateProduct, updateProduct);
+router.delete("/:id", isAuthenticated, deleteProduct);
 
 module.exports = router;

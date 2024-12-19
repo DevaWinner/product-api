@@ -2,15 +2,32 @@ require("dotenv").config();
 const express = require("express");
 const { connectDB } = require("./config/database");
 const productRoutes = require("./routes/productRoutes");
+const authRoutes = require("./routes/authRoutes");
 const errorHandler = require("./middlewares/errorHandler");
 const { swaggerUi, swaggerSpec } = require("./docs/swagger");
+const passport = require("passport");
+const session = require("express-session");
+require("./config/passportConfig");
 
 const app = express();
 const port = process.env.PORT || 3000;
 
+// Middlewares
 app.use(express.json());
+app.use(
+	session({
+		secret: process.env.SESSION_SECRET,
+		resave: false,
+		saveUninitialized: true,
+	})
+);
+app.use(passport.initialize());
+app.use(passport.session());
 
-// Routes
+// Auth Routes
+app.use("/auth", authRoutes);
+
+// Product Routes
 app.use("/products", productRoutes);
 
 // API Docs
